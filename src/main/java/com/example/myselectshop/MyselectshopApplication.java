@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class MyselectshopApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(MyselectshopApplication.class, args);
     }
 
