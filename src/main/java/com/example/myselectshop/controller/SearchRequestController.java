@@ -1,5 +1,4 @@
 package com.example.myselectshop.controller;
 
-public class ProductController {
-
+public class SearchRequestController {
 }
