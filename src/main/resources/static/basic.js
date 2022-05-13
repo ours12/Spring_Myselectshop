@@ -37,9 +37,8 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-///// 여기 아래에서부터 코드를 작성합니다. ////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 function execSearch() {
     /**
@@ -47,6 +46,23 @@ function execSearch() {
      * 검색결과 목록: #search-result-box
      * 검색결과 HTML 만드는 함수: addHTML
      */
+    $('#search-result-box').empty();
+    let query = $('#query').val();
+    if (query == ''){
+        alert("검색어를 입력해주세요");
+        $('#query').focus();
+    }
+    $.ajax({
+        type: 'GET',
+        url: `/api/search?query=${query}`,
+        success: function (response){
+            for(let i = 0; i<response.length; i++){
+                let itemDto = response[i];
+                let tempHtml = addHTML(itemDto);
+                $('#search-result-box').append(tempHtml);
+            }
+        }
+    })
     // 1. 검색창의 입력값을 가져온다.
     // 2. 검색창 입력값을 검사하고, 입력하지 않았을 경우 focus.
     // 3. GET /api/search?query=${query} 요청
@@ -60,7 +76,21 @@ function addHTML(itemDto) {
      * image, title, lprice, addProduct 활용하기
      * 참고) onclick='addProduct(${JSON.stringify(itemDto)})'
      */
-    return ``
+    return `<div class="search-itemDto">
+            <div class="search-itemDto-left">
+                <img src="${itemDto.image}" alt="">
+            </div>
+            <div class="search-itemDto-center">
+                <div>${itemDto.title}</div>
+                <div class="price">
+                    ${numberWithCommas(itemDto.lprice)}
+                    <span class="unit">원</span>
+                </div>
+            </div>
+            <div class="search-itemDto-right">
+                <img src="images/icon-save.png" alt="" onclick='addProduct(${JSON.stringify(itemDto)})'>
+            </div>
+        </div>`
 }
 
 function addProduct(itemDto) {
@@ -70,6 +100,16 @@ function addProduct(itemDto) {
      * 1. contentType: "application/json",
      * 2. data: JSON.stringify(itemDto),
      */
+    $.ajax({
+        type: "POST",
+        url: "/api/products",
+        data: JSON.stringify(itemDto),
+        contentType: "application/json",
+        success: function (response){
+            $('#container').addClass('active');
+            targetId = response.id;
+        }
+    })
     // 1. POST /api/products 에 관심 상품 생성 요청
     // 2. 응답 함수에서 modal을 뜨게 하고, targetId 를 reponse.id 로 설정 (숙제로 myprice 설정하기 위함)
 }
