@@ -38,6 +38,11 @@ public class Product extends Timestamped{
         this.myprice = 0; // 최저가설정이 없을때, 최저가 표시를 나타내지 않기 위해서 가장 낮은 금액 0으로 설정
     }
 
+    // 스케쥴러 update 메서드
+    public void updateByItemDto(ItemDto itemDto){
+        this.lprice = itemDto.getLprice();
+    }
+
     //update 메서드
     public void update(ProductMypriceRequestDto requestDto){
         this.myprice = requestDto.getMyprice();

@@ -1,6 +1,7 @@
 package com.example.myselectshop.service;
 
 
+import com.example.myselectshop.models.ItemDto;
 import com.example.myselectshop.models.Product;
 import com.example.myselectshop.models.ProductMypriceRequestDto;
 import com.example.myselectshop.models.ProductRepository;
@@ -22,6 +23,17 @@ public class ProductService {
                 () -> new NullPointerException("해당 아이디가 존재하지 않습니다.")
         );
         product.update(requestDto);
+        return id;
+    }
+
+    @Transactional
+    public Long updateBySearch(Long id, ItemDto itemDto){
+        // id 를 찾고,
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+        );
+        // 찾은 id를 업데이트 한다.
+        product.updateByItemDto(itemDto);
         return id;
     }
 }
