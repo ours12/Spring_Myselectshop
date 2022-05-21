@@ -1,7 +1,7 @@
 let targetId;
 
 $(document).ready(function () {
-    // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행하라는 뜻입니다.
+    // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행하라는 뜻.
     $('#query').on('keypress', function (e) {
         if (e.key == 'Enter') {
             execSearch();
@@ -37,9 +37,7 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-///// 여기 아래에서부터 코드를 작성합니다. ////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
+
 
 function execSearch() {
     /**
@@ -110,7 +108,7 @@ function addProduct(itemDto) {
         contentType: "application/json",
         data: JSON.stringify(itemDto),
         success: function (response) {
-            // 2. 응답 함수에서 modal을 뜨게 하고, targetId 를 reponse.id 로 설정 (숙제로 myprice 설정하기 위함)
+            // 2. 응답 함수에서 modal을 뜨게 하고, targetId 를 reponse.id 로 설정 ( myprice 설정하기 위함)
             $('#container').addClass('active');
             targetId = response.id;
         }
@@ -164,8 +162,26 @@ function addProductItem(product) {
 }
 
 function setMyprice() {
+    let myprice = $('#myprice').val()
+    if(myprice == '') {
+        alert("가격을 입력해 주세요")
+        return;
+    }
+
+    $.ajax({
+        type: "PUT",
+        url: '/api/products/${targetId}',
+        contentType: "application/json",
+        data: JSON.stringify({myprice: myprice}),
+        success: function (response){
+            $('#container').removeClass('active');
+            alert("성공적으로 등록되었습니다.");
+            window.location.reload();
+        }
+    })
+
     /**
-     * 숙제! myprice 값 설정하기.
+     *  myprice 값 설정하기.
      * 1. id가 myprice 인 input 태그에서 값을 가져온다.
      * 2. 만약 값을 입력하지 않았으면 alert를 띄우고 중단한다.
      * 3. PUT /api/product/${targetId} 에 data를 전달한다.
